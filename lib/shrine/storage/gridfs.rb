@@ -26,7 +26,7 @@ class Shrine
         end
       end
 
-      def open(id, rewindable: true, **)
+      def open(id, rewindable: true, encoding: Encoding::BINARY, **)
         info   = file_info(id) or raise Shrine::FileNotFound, "file #{id.inspect} not found on storage"
         stream = bucket.open_download_stream(bson_id(id))
 
@@ -35,6 +35,7 @@ class Shrine
           chunks:     stream.enum_for(:each),
           on_close:   -> { stream.close },
           rewindable: rewindable,
+          encoding:   encoding,
         )
       end
 
